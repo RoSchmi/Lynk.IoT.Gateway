@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "Lynk.IoT.Gateway.Persistent": {
+      "commandName": "Project"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+﻿<Page
+    x:Class="Lynk.IoT.Gateway.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Lynk.IoT.Gateway.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:p="using:Prism.Windows.Mvvm"
+    p:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBlock Text="Settings" Style="{StaticResource SubheaderTextBlockStyle}" />
+        <StackPanel Grid.Row="1" Margin="0,16">
+            <TextBox Header="TCP Server Port" Text="{Binding Port, Mode=TwoWay}" ToolTipService.ToolTip="Range: 9000-60000. Default: 10000"  />
+            <TextBlock Text="{Binding Errors[Port][0]}" FontSize="16" Foreground="Red"  HorizontalAlignment="Right" />
+        </StackPanel>
+    </Grid>
+</Page>

@@ -1,0 +1,80 @@
+﻿<Page
+    x:Class="Lynk.IoT.Gateway.Views.DashboardPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Lynk.IoT.Gateway.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:p="using:Prism.Windows.Mvvm"
+    xmlns:vm="using:Lynk.IoT.Gateway.Contracts.ViewModels"
+    xmlns:models="using:Lynk.IoT.Gateway.Contracts.Models"
+    p:ViewModelLocator.AutoWireViewModel="True"
+    
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <DataTemplate x:DataType="models:AnalogPin" x:Key="analogPinViewModelDataTemplate">
+            <StackPanel>
+                <TextBlock Text="Analog" />
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:DataType="models:DigitalPin" x:Key="digitalPinViewModelDataTemplate">
+            <StackPanel>
+                <ToggleSwitch OffContent="Off"  OnContent="On"  IsOn="{x:Bind State, Mode=TwoWay}">
+                    <ToggleSwitch.Header>
+                        <StackPanel>
+                            <TextBlock Text="{x:Bind Name, Mode=OneTime}" />
+                        </StackPanel>
+                    </ToggleSwitch.Header>
+                </ToggleSwitch>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:DataType="models:PwmPin" x:Key="pwmPinViewModelDataTemplate">
+            <StackPanel>
+                <TextBlock Text="Pwm" />
+            </StackPanel>
+        </DataTemplate>
+        <local:PinViewDataTemplateSelector x:Key="gpioDataTemplateSelector" AnalogPinViewModelDataTemplate="{StaticResource analogPinViewModelDataTemplate}"
+                                          DigitalPinViewModelDataTemplate="{StaticResource digitalPinViewModelDataTemplate}" PwmPinViewModelDataTemplate="{StaticResource pwmPinViewModelDataTemplate}"/>
+    </Page.Resources>
+    <Grid Margin="0,0,0,12" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+        <Grid.RowDefinitions>
+           
+            <RowDefinition Height="*" />
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+        <Button Grid.Row="1" Content="Restart Network Service" Command="{Binding RestartCommand}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  />
+
+        <Grid >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.5*" />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+            <ListView Margin="0,0,12,0" SelectionMode="Single" IsItemClickEnabled="False" ItemsSource="{Binding Service.Connected, Mode=TwoWay}" 
+                   x:Name="connectedDevices">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:DeviceInfo">
+                        <StackPanel>
+                            <TextBlock Text="{x:Bind Name}" Style="{StaticResource SubtitleTextBlockStyle}" />
+                            <TextBlock Text="{x:Bind EndPoint.Address.ToString()}" FontSize="12" />
+                            <TextBlock Text="{x:Bind OS}" FontSize="12" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Grid Grid.Column="1"  DataContext="{Binding Path=SelectedValue, ElementName=connectedDevices, Mode=OneWay}" >
+                <TextBlock Text="{Binding Path=Name}" Style="{ThemeResource SubheaderTextBlockStyle}" />
+                <ScrollViewer Margin="0,44,0,0">
+                    <ItemsControl    ItemsSource="{Binding Pins}" ItemTemplateSelector="{StaticResource gpioDataTemplateSelector}" >
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsStackPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

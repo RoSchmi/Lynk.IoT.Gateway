@@ -1,0 +1,104 @@
+﻿<Page
+    x:Class="Lynk.IoT.Gateway.Views.DevicePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Lynk.IoT.Gateway.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:p="using:Prism.Windows.Mvvm"
+    xmlns:converters="using:Lynk.IoT.Gateway.Converters"
+    p:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+       
+        <Grid.RowDefinitions>
+            <RowDefinition  Height="*"/>
+            <RowDefinition Height="64" />
+        </Grid.RowDefinitions>
+        <Grid.Resources>
+            <Style TargetType="Button">
+                <Setter Property="Margin" Value="0,8" />
+                <Setter Property="Height" Value="48" />
+                <Setter Property="Width" Value="48" />
+                <Setter Property="Margin" Value="8" />
+                <Setter Property="Background" Value="Transparent" />
+            </Style>
+            <Style TargetType="FontIcon">
+                <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
+            </Style>
+            <converters:GuidToStringConverter x:Key="guidToStringConverter" />
+        </Grid.Resources>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1.5*" />
+            </Grid.ColumnDefinitions>
+            <Grid  Margin="12">
+
+
+                <ListView ItemsSource="{Binding Devices, Mode=OneWay}" 
+                      x:Name="devicesList" 
+                      Header="Available Devices" 
+                      SelectedItem="{Binding Device, Mode=TwoWay}">
+                    <ListView.Resources>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="BorderBrush" Value="Green" />
+                            <Setter Property="BorderThickness" Value="1" />
+                            <Setter Property="Margin" Value="4" />
+                        </Style>
+                    </ListView.Resources>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="4">
+                                <StackPanel.Resources>
+                                    <Style TargetType="TextBlock">
+                                      
+                                        <Setter Property="FontSize" Value="16" />
+                                    </Style>
+                                </StackPanel.Resources>
+                                <TextBlock Text="{Binding Id, Mode=OneWay, Converter={StaticResource guidToStringConverter}}" FontSize="12" />
+                                <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                                <TextBlock Text="{Binding OS}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+
+                </ListView>
+
+            </Grid>
+            <Grid Grid.Column="1" Margin="12" >
+             
+                <ScrollViewer>
+                    <StackPanel DataContext="{Binding Device}" Margin="0,0,24,0">
+                       
+                        <TextBox Text="{Binding Name, Mode=TwoWay}" Header="Device Name"  />
+                        <TextBox Text="{Binding OS, Mode=TwoWay}" Header="Device OS" />
+                        <TextBox Text="{Binding Key, Mode=TwoWay}" Header="Device Key" />
+                        <TextBlock Text="{Binding Id, Mode=OneWay, Converter={StaticResource guidToStringConverter}}" 
+                                   Margin="0, 12" 
+                                   TextAlignment="Center" 
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                </ScrollViewer>
+
+
+            </Grid>
+        </Grid>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center" >
+            <Button HorizontalAlignment="Stretch" Command="{Binding Add}" x:Name="btnAdd" Click="btnAdd_Click">
+                <FontIcon Glyph="&#xE710;" />
+            </Button>
+            <Button  HorizontalAlignment="Stretch" Command="{Binding Save}" ToolTipService.ToolTip="Save">
+                <FontIcon Glyph="&#xE105;" />
+            </Button>
+            <Button   HorizontalAlignment="Stretch" Command="{Binding Delete}" ToolTipService.ToolTip="Delete">
+                <FontIcon Glyph="&#xE107;"  />
+            </Button>
+            <Button  HorizontalAlignment="Stretch" Command="{Binding Cancel}" ToolTipService.ToolTip="Cancel">
+                <FontIcon Glyph="&#xE711;"  />
+            </Button>
+        </StackPanel>
+    </Grid>
+</Page>
